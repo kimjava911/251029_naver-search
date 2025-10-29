@@ -17,9 +17,13 @@ public class Application {
         final String baseUrl = "https://openapi.naver.com/v1/search/news.json";
         String query = "칼국수";
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
+        String NAVER_CLIENT_ID = System.getenv("NAVER_CLIENT_ID");
+        String NAVER_CLIENT_SECRET = System.getenv("NAVER_CLIENT_SECRET");
         HttpRequest request = HttpRequest.newBuilder()
                 // 쿼리스트링(queryString). Search Parameters
                 .uri(URI.create("%s?query=%s".formatted(baseUrl, encodedQuery)))
+                .header("X-Naver-Client-Id", NAVER_CLIENT_ID)
+                .header("X-Naver-Client-Secret", NAVER_CLIENT_SECRET)
                 .build();
         HttpClient client = HttpClient.newHttpClient();
         try {
