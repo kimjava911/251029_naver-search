@@ -7,7 +7,6 @@ public abstract class AbstractNaverSearchService implements NaverSearchService, 
     protected final String NAVER_CLIENT_SECRET = System.getenv("NAVER_CLIENT_SECRET");
     protected final String[] headers = {"X-Naver-Client-Id", NAVER_CLIENT_ID, "X-Naver-Client-Secret", NAVER_CLIENT_SECRET};
 
-
     protected AbstractNaverSearchService() {
         // 설정을 안해서 null 값이 나왔을 때
       if (NAVER_CLIENT_ID == null || NAVER_CLIENT_SECRET == null)  {
