@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 public class SearchUtil {
     // query -> UTF8 인코딩
@@ -67,28 +68,32 @@ public class SearchUtil {
         );
     }
 
+    // ForkJoinPool -> cpu 코어 수 - 1 개로 스레드를 생성함
     public static void saveImageItem(String query, List<ImageItem> items) {
-        for (ImageItem item : items) {
-//            System.out.println(item);
-            String[] tmp = item.link()
-                    .replace("/", ".").split("\\.");
-            String filename = "%s_%s.%s".formatted(query, tmp[tmp.length - 2], tmp[tmp.length - 1].split("\\?")[0]);
-//            System.out.println(filename);
-            Path destination = Path.of(filename);
-            HttpClient client = HttpClient.newHttpClient();
-            System.out.println(item.link());
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(item.link().replace("\\/", "/")))
-                    .build();
-            try {
-                client.send(request, HttpResponse.BodyHandlers.ofFile(destination));
-                System.out.println("파일 다운로드 완료 : " + filename);
-            } catch (Exception e) {
-                // 안되면 무시
-                System.out.println("파일 다운로드 실패 : " + filename);
-                e.printStackTrace();
-//                throw new RuntimeException(e);
-            }
+        long start = System.currentTimeMillis();
+        ForkJoinPool pool = ForkJoinPool.commonPool();
+        System.out.println(pool.getParallelism());
+        System.out.println(Runtime.getRuntime().availableProcessors());
+        items.stream()
+//                .parallel() // 1254ms
+                // 3249ms
+                .forEach(item -> saveImageFile(query, item));
+        System.out.println((System.currentTimeMillis() - start) + "ms");
+    }
+
+    public static void saveImageFile(String query, ImageItem item) {
+        String[] tmp = item.link()
+                .replace("/", ".").split("\\.");
+        String filename = "%s_%s.%s".formatted(query, tmp[tmp.length - 2], tmp[tmp.length - 1].split("\\?")[0]);
+        Path destination = Path.of(filename);
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(item.link().replace("\\/", "/")))
+                .build();
+        try {
+            client.send(request, HttpResponse.BodyHandlers.ofFile(destination));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
