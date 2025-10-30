@@ -11,7 +11,7 @@ public class Application {
         NaverSearchService searchService = new NaverNewsSearchService();
         // TODO : NaverImageSearchService();
         // 파싱 -> JSON 해석
-        String query = "칼국수";
+        String query = "닭도리탕";
         String result = searchService.search(query);
         if (searchService instanceof NaverNewsSearchService) {
             String tmp = result.split("\"items\":\\[")[1].strip();

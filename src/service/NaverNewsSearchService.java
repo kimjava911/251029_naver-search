@@ -5,6 +5,10 @@ import util.SearchUtil;
 
 public class NaverNewsSearchService extends AbstractNaverSearchService {
 
+    public NaverNewsSearchService() {
+        super("https://openapi.naver.com/v1/search/news.json");
+    }
+
     @Override
     public String search(String query) { // throws도 interface와 일치해야함
         String url = "%s?query=%s".formatted(baseUrl, SearchUtil.encodeQuery(query));

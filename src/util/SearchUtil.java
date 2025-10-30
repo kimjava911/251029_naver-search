@@ -28,7 +28,9 @@ public class SearchUtil {
     }
 
     public static void saveNewsItem(String query, List<NewsItem> items) {
-        String filename = query + "_" + LocalDateTime.now().toString().replace(":", ".");
+        // 파일 이름에 확장자가 없음
+//        String filename = query + "_" + LocalDateTime.now().toString().replace(":", ".");
+        String filename = "%s_%s.txt".formatted(query, LocalDateTime.now().toString().replace(":", "."));
         File file = new File(filename);
         try (FileWriter writer = new FileWriter(file)) {
             if (!file.exists()) { // 존재여부 확인
