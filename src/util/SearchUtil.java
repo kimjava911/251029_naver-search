@@ -6,8 +6,13 @@ import model.NewsItem;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -62,4 +67,28 @@ public class SearchUtil {
         );
     }
 
+    public static void saveImageItem(String query, List<ImageItem> items) {
+        for (ImageItem item : items) {
+//            System.out.println(item);
+            String[] tmp = item.link()
+                    .replace("/", ".").split("\\.");
+            String filename = "%s_%s.%s".formatted(query, tmp[tmp.length - 2], tmp[tmp.length - 1].split("\\?")[0]);
+//            System.out.println(filename);
+            Path destination = Path.of(filename);
+            HttpClient client = HttpClient.newHttpClient();
+            System.out.println(item.link());
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(item.link().replace("\\/", "/")))
+                    .build();
+            try {
+                client.send(request, HttpResponse.BodyHandlers.ofFile(destination));
+                System.out.println("파일 다운로드 완료 : " + filename);
+            } catch (Exception e) {
+                // 안되면 무시
+                System.out.println("파일 다운로드 실패 : " + filename);
+                e.printStackTrace();
+//                throw new RuntimeException(e);
+            }
+        }
+    }
 }

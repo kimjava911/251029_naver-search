@@ -26,13 +26,11 @@ public class Application {
             }
             SearchUtil.saveNewsItem(query, itemList);
         } else if (searchService instanceof NaverImageSearchService) {
-//            System.out.println(result);
-            // TODO : Generic을 써서 ImageItem과 NewsItem을 동시에 처리하는 메서드
             List<ImageItem> itemList = new ArrayList<>();
             for (String v : items) {
                 itemList.add(SearchUtil.getImageItem(v));
             }
-            System.out.println(itemList);
+            SearchUtil.saveImageItem(query, itemList);
         }
     }
 }
