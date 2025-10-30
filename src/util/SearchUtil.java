@@ -1,5 +1,6 @@
 package util;
 
+import model.ImageItem;
 import model.NewsItem;
 
 import java.io.File;
@@ -46,5 +47,16 @@ public class SearchUtil {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static ImageItem getImageItem(String jsonItem) {
+        String[] data = jsonItem.split("\":\""); // ":"
+        return new ImageItem(
+                data[1].split("\",")[0],
+                data[2].split("\",")[0],
+                data[3].split("\",")[0],
+                data[4].split("\",")[0],
+                data[5].strip().substring(0, data[5].strip().length() - 1)
+        );
     }
 }
