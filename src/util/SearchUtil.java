@@ -25,6 +25,7 @@ public class SearchUtil {
                 data[3].split("\",")[0],
                 data[4].split("\",")[0],
                 data[5].strip().substring(0, data[5].strip().length() - 1)
+                        .split("\"")[0]
         );
     }
 
@@ -57,6 +58,8 @@ public class SearchUtil {
                 data[3].split("\",")[0],
                 data[4].split("\",")[0],
                 data[5].strip().substring(0, data[5].strip().length() - 1)
+                        .split("\"")[0]
         );
     }
+
 }
